@@ -1,0 +1,46 @@
+{
+  "name": "wegen",
+  "version": "0.1.0",
+  "description": "Dead-simple client-side routing with an eye towards Flux architectures",
+  "main": "dist/wegen.js",
+  "scripts": {
+    "build": "node_modules/.bin/webpack",
+    "prepublish": "npm test && npm run build",
+    "test": "node_modules/.bin/jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:pletcher/wegen.git"
+  },
+  "author": {
+    "name": "Charles Pletcher",
+    "url": "https://github.com/pletcher"
+  },
+  "keywords": [
+    "flux",
+    "router",
+    "javascript"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pletcher/wegen/issues"
+  },
+  "dependencies": {
+    "nprogress": "^0.1.6",
+    "page": "^1.6.0"
+  },
+  "devDependencies": {
+    "babel": "^4.1.1",
+    "babel-core": "^4.1.1",
+    "babel-loader": "^4.0.0",
+    "jest-cli": "^0.3.0",
+    "react-tools": "^0.12.2"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "scriptPreprocessor": "<rootDir>/preprocessor.js",
+    "testPathDirs": [
+      "<rootDir>/src"
+    ]
+  }
+}
