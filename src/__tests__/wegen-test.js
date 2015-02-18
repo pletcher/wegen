@@ -9,6 +9,7 @@ describe('Wegen', () => {
   const TEST_ROUTES = [
     ['/', testFunc]
   ];
+
   afterEach(() => {
     testFunc.mockClear();
   });
@@ -45,6 +46,7 @@ describe('Wegen', () => {
 
     beforeEach(() => {
       w = new Wegen(TEST_ROUTES, progressStart, progressStop);
+      w.start();
     });
 
     afterEach(() => {
@@ -72,9 +74,11 @@ describe('Wegen', () => {
     let page = require('page');
 
     it('passes a callback to `page`', () => {
-      new Wegen(TEST_ROUTES);
+      let w = new Wegen(TEST_ROUTES);
 
-      expect(page).toBeCalledWith('/', testFunc);
+      w.start();
+
+      expect(page).toBeCalledWith('/', testFunc, w.progressStop);
     });
   });
 
@@ -82,7 +86,8 @@ describe('Wegen', () => {
     let page = require('page');
 
     it('stops `page`', () => {
-      w = new Wegen(TEST_ROUTES);
+      let w = new Wegen(TEST_ROUTES);
+      w.start();
       w.stop();
 
       expect(page.stop).toBeCalled();
