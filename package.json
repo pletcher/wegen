@@ -1,8 +1,8 @@
 {
   "name": "wegen",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Dead-simple client-side routing with an eye towards Flux architectures",
-  "main": "dist/wegen.js",
+  "main": "src/wegen.js",
   "scripts": {
     "build": "node_modules/.bin/webpack",
     "prepublish": "npm test && npm run build",

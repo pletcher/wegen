@@ -12,19 +12,24 @@ const url = require('url');
 
 const _callAndDispatch = (context, callback) => {
   let request = new XMLHttpRequest();
-  let self = this;
 
   request.open('GET', context.canonicalPath, true);
   request.setRequestHeader('Accept', 'application/json');
 
   request.onload = () => {
-    this.progressStop();
-
     if (request.status >= 200 && request.status < 400) {
-      return callback(null, JSON.parse(request.responseText));
+      let response;
+
+      try {
+        response = JSON.parse(request.responseText);
+      } catch (e) {
+        response = request.responseText;
+      }
+
+      return callback(null, response, context);
     }
 
-    callback(new Error(request.responseText));
+    callback(new Error(request.responseText), context);
   };
 
   request.send();
@@ -51,8 +56,6 @@ class Wegen {
     });
 
     page('*', _parse);
-
-    page.start();
   }
 
   get(callback) {
@@ -74,7 +77,11 @@ class Wegen {
     let path = routeDef[0];
     let callback = routeDef[1];
 
-    page(path, this.get(callback));
+    page(path, this.get(callback), this.progressStop);
+  }
+
+  start() {
+    page.start();
   }
 
   stop() {
