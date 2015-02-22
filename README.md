@@ -6,7 +6,7 @@ Dead-simple client-side routing with an eye towards Flux architectures
 
 [Wegen](http://en.wiktionary.org/wiki/weg#Dutch)
 
-```
+```javascript
 // A brief introduction in pseudocode (more to come)
 
 var routes = [
@@ -39,6 +39,7 @@ function doSomethingAwesome(err, response[, context]) {
 ## Dependencies
 
 [page.js](http://visionmedia.github.io/page.js/)
+
 [nprogress](http://ricostacruz.com/nprogress/)
 
 
