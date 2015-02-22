@@ -1,12 +1,12 @@
 {
   "name": "wegen",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Dead-simple client-side routing with an eye towards Flux architectures",
-  "main": "src/wegen.js",
+  "main": "dist/wegen.js",
   "scripts": {
-    "build": "node_modules/.bin/webpack",
+    "build": "webpack && webpack --config webpack.config.min.js",
     "prepublish": "npm test && npm run build",
-    "test": "node_modules/.bin/jest"
+    "test": "jest"
   },
   "repository": {
     "type": "git",

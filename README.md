@@ -1,7 +1,46 @@
 # Wegen
 Dead-simple client-side routing with an eye towards Flux architectures
 
-# Usage
+
+## Usage
+
+[Wegen](http://en.wiktionary.org/wiki/weg#Dutch)
+
+```
+// A brief introduction in pseudocode (more to come)
+
+var routes = [
+  '/thing/:id', // passed directly to page.js
+  doSomethingAwesome  
+]
+
+var wegen = new Wegen(routes);
+
+function doSomethingAwesome(err, response[, context]) {
+  if (err) {
+    return handleError(err);
+  }
+
+  Dispatcher.dispatch({
+    actionType: 'ROUTE_CHANGED',
+    component: require('../thing.jsx'),
+    context: context
+  });
+
+  Dispatcher.dispatch({
+    actionType: 'THING_RECEIVED',
+    thing: response.thing
+  });
+}
+
+```
+
+
+## Dependencies
+
+[page.js](http://visionmedia.github.io/page.js/)
+[nprogress](http://ricostacruz.com/nprogress/)
+
 
 # License
 The MIT License (MIT)

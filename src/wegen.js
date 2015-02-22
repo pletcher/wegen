@@ -51,11 +51,11 @@ class Wegen {
     this.progressStart = progressStart || nprogress.start;
     this.progressStop = progressStop || nprogress.done;
 
+    page('*', _parse);
+
     routes.forEach((routeDef) => {
       this.route(routeDef);
     });
-
-    page('*', _parse);
   }
 
   get(callback) {
