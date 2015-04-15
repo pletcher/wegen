@@ -1,6 +1,6 @@
 {
   "name": "wegen",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Dead-simple client-side routing with an eye towards Flux architectures",
   "main": "dist/wegen.js",
   "scripts": {
@@ -26,21 +26,26 @@
     "url": "https://github.com/pletcher/wegen/issues"
   },
   "dependencies": {
-    "nprogress": "^0.1.6",
-    "page": "^1.6.0"
+    "immutable": "^3.7.2",
+    "react": "^0.13.1"
   },
   "devDependencies": {
     "babel": "^4.1.1",
     "babel-core": "^4.1.1",
+    "babel-jest": "^5.0.1",
     "babel-loader": "^4.0.0",
-    "jest-cli": "^0.3.0",
+    "jest-cli": "^0.4.0",
     "react-tools": "^0.12.2"
   },
   "jest": {
-    "collectCoverage": true,
-    "scriptPreprocessor": "<rootDir>/preprocessor.js",
+    "collectCoverage": false,
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
     "testPathDirs": [
       "<rootDir>/src"
+    ],
+    "unmockedModulePathPatterns": [
+      "immutable",
+      "react"
     ]
   }
 }
