@@ -1,58 +1,112 @@
 'use strict';
 
 import React from 'react';
-import { Map, Record } from 'immutable';
+import { List, Map, Record } from 'immutable';
 
-export class Router extends Record({
-  action: () => {},
-  component: null,
-  name: '',
-  path: '/'
-}) {
-  constructor(component, path, name, action) {
-    if (!component) {
-      throw new Error('Cannot construct route without `component`.')
-    }
-
-    if (!React.isValidElement(component)) {
-      if (!component.component) {
-        throw new Error('Cannot construct route without `component`.');
-      }
-
-      super(component);
+const _findNode = (pathMap, pathList, Component) => {
+  let newComponent;
+  if (pathMap.get('$$__component')) {
+    if (!Component) {
+      newComponent = pathMap.get('$$__component');
     } else {
-      let record = { component };
-
-      if (path) {
-        record.path = path;
-      }
-
-      if (name) {
-        record.name = name;
-      }
-
-      if (action) {
-        record.action = action;
-      }
-
-      super(record);
+      newComponent = (
+        <Component>
+          {pathMap.get('$$__component')}
+        </Component>
+      );
     }
-
-    this.subroutes = Map();
   }
 
-  mount(router, path) {
-    this.subroutes = this.subroutes.set(
-      path || router.get('path') || '/',
-      router
+  if (pathList.size === 0) {
+    return pathMap;
+  }
+
+  let nextNode = pathList.get(0);
+
+  return _findNode(pathMap.get(nextNode), pathList.shift(), newComponent);
+}
+
+const _makePathList = (path) => {
+  let pathList = path.split('/');
+
+  while (pathList[0] === '') {
+    pathList.shift();
+  }
+
+  return List(pathList);
+}
+
+const _terminatePathWith = (routeObject) => {
+  const _buildPath = (pathMap, pathList) => {
+    if (pathList.size === 0) {
+      pathMap = pathMap.set('$$__component', routeObject.component);
+      pathMap = pathMap.set('$$__action', routeObject.action);
+      pathMap = pathMap.set('$$__name', routeObject.name);
+      return pathMap;
+    }
+
+    let nextKey = pathList.get(0);
+
+    return pathMap.set(
+      nextKey,
+      _buildPath(Map(), pathList.shift())
     );
   }
 
+  return _buildPath;
+};
+
+class MissingComponentError extends Error {
+  constructor() {
+    super('Cannot construct route without `component`.');
+  }
+};
+
+export class Router {
+  static buildPath(path, routeObject) {
+    let pathNodes = _makePathList(path);
+
+    return _terminatePathWith(routeObject)(Map(), pathNodes);
+  }
+
+  constructor(component, path, name, action) {
+    if (!component) {
+      throw new MissingComponentError();
+    }
+
+    let routeObject;
+    if (component.component) {
+      routeObject = {
+        component: component.component,
+        path: component.path,
+        name: component.name,
+        action: component.action
+      };
+    } else {
+      routeObject = { component, name, action };
+    }
+
+    path = path || component.path || '/';
+    this.routes = Router.buildPath(path, routeObject);
+
+    return this;
+  }
+
+  match(path) {
+    let pathNodes = _makePathList(path);
+
+    return _findNode(this.routes, pathNodes);
+  }
+
+  mount(router) {
+    this.routes = this.routes.merge(router.routes);
+  }
+
   render(component, path, name, action) {
-    let route = new Router(component, path, name, action);
+    let router = new Router(component, path, name, action);
 
-    this.subroutes = this.subroutes.set(route.get('path'), route);
+    this.mount(router, path || component.path || '/');
 
-    return route;
+    return router;
   }
 };
